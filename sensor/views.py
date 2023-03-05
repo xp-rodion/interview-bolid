@@ -1,3 +1,6 @@
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+
 from sensor.serializers import EventSerializer, SensorSerializer
 from sensor.models import Event, Sensor
 
@@ -21,3 +24,14 @@ class SensorAPIView(BaseCRUDAPIView):
     serializer_class = SensorSerializer
     manager = Sensor.objects
     queryset = manager.all()
+
+
+class SensorAllEventsAPIView(GenericAPIView):
+
+    serializer_class = EventSerializer
+
+    def get(self, request, pk):
+        events = Event.objects.filter(sensor_id=pk)
+        if events:
+            return Response(self.serializer_class(Event.objects.filter(sensor_id=pk), many=True).data)
+        return Response({'GET': 'Error, objects  does not exists'})
