@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from sensor.views import EventAPIView, SensorAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/event/', EventAPIView.as_view()),
+    path('api/event/<int:pk>/', EventAPIView.as_view()),
+    path('api/sensor/', SensorAPIView.as_view()),
+    path('api/sensor/<int:pk>/', SensorAPIView.as_view())
 ]
