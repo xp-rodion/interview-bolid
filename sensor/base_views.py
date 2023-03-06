@@ -8,10 +8,10 @@ class BaseCRUDAPIView(GenericAPIView):
     manager = None
 
     def get(self, request):
-        return Response(self.serializer_class(self.manager.all(), many=True).data)
+        return Response(self.get_serializer(self.get_queryset(), many=True).data)
 
     def serialize(self, event):
-        post_serializer = self.serializer_class(data=event)
+        post_serializer = self.get_serializer(data=event)
         post_serializer.is_valid(raise_exception=True)
         post_serializer.save()
 
@@ -29,7 +29,7 @@ class BaseCRUDAPIView(GenericAPIView):
         except ObjectDoesNotExist:
             return Response({'PUT': 'Error, object does not exists'})
 
-        put_serializer = self.serializer_class(data=request.data, instance=instance)
+        put_serializer = self.get_serializer(data=request.data, instance=instance)
         put_serializer.is_valid(raise_exception=True)
         put_serializer.save()
         return Response({'PUT': 'success'})

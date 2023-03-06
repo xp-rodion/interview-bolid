@@ -3,14 +3,21 @@ from rest_framework.response import Response
 
 from sensor.serializers import EventSerializer, SensorSerializer
 from sensor.models import Event, Sensor
-
 from sensor.base_views import BaseCRUDAPIView
+from sensor.paginate import BasePaginationClass
 
 
 class EventAPIView(BaseCRUDAPIView):
     serializer_class = EventSerializer
     manager = Event.objects
     queryset = manager.all()
+    pagination_class = BasePaginationClass
+
+    def get(self, request):
+        page = self.paginate_queryset(self.get_queryset())
+        if page:
+            return self.get_paginated_response(self.get_serializer(page, many=True).data)
+        return super(EventAPIView, self).get(request)
 
     def post(self, request):
         for sensor in request.data:
@@ -27,11 +34,15 @@ class SensorAPIView(BaseCRUDAPIView):
 
 
 class SensorAllEventsAPIView(GenericAPIView):
-
+    pagination_class = BasePaginationClass
     serializer_class = EventSerializer
+    queryset = None
 
     def get(self, request, pk):
-        events = Event.objects.filter(sensor_id=pk)
-        if events:
-            return Response(self.serializer_class(Event.objects.filter(sensor_id=pk), many=True).data)
+        self.queryset = Event.objects.filter(sensor_id=pk)
+        if self.get_queryset():
+            page = self.paginate_queryset(self.get_queryset())
+            if page:
+                return self.get_paginated_response(self.get_serializer(page, many=True).data)
+            return Response(self.get_serializer(self.get_queryset(), many=True).data)
         return Response({'GET': 'Error, objects  does not exists'})
