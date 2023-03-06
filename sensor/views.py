@@ -1,17 +1,18 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from sensor.serializers import EventSerializer, SensorSerializer
+from sensor.serializers import SensorSerializer
 from sensor.models import Event, Sensor
 from sensor.base_views import BaseCRUDAPIView
-from sensor.paginate import BasePaginationClass
+from sensor.service import EventMixin
 
 
-class EventAPIView(BaseCRUDAPIView):
-    serializer_class = EventSerializer
+class EventAPIView(EventMixin, BaseCRUDAPIView):
     manager = Event.objects
     queryset = manager.all()
-    pagination_class = BasePaginationClass
+
+    def get_queryset(self):
+        return self.filter_queryset(super(EventAPIView, self).get_queryset())
 
     def get(self, request):
         page = self.paginate_queryset(self.get_queryset())
@@ -33,13 +34,10 @@ class SensorAPIView(BaseCRUDAPIView):
     queryset = manager.all()
 
 
-class SensorAllEventsAPIView(GenericAPIView):
-    pagination_class = BasePaginationClass
-    serializer_class = EventSerializer
-    queryset = None
+class SensorAllEventsAPIView(EventMixin, GenericAPIView):
 
     def get(self, request, pk):
-        self.queryset = Event.objects.filter(sensor_id=pk)
+        self.queryset = self.filter_queryset(Event.objects.filter(sensor_id=pk))
         if self.get_queryset():
             page = self.paginate_queryset(self.get_queryset())
             if page:
