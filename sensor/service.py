@@ -1,11 +1,8 @@
+import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
-
-from sensor.models import Event
-
 from rest_framework.pagination import PageNumberPagination
 
-import django_filters
-
+from sensor.models import Event
 from sensor.serializers import EventSerializer
 
 

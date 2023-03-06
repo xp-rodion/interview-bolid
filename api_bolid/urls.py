@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from sensor.views import EventAPIView, SensorAPIView, SensorAllEventsAPIView
+
+from api_bolid.yasg import urlpatterns as docs_url
+from sensor.views import EventAPIView, SensorAllEventsAPIView, SensorAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +26,4 @@ urlpatterns = [
     path('api/sensor/', SensorAPIView.as_view()),
     path('api/sensor/<int:pk>/', SensorAPIView.as_view()),
     path('api/sensor/events/<int:pk>/', SensorAllEventsAPIView.as_view())
-]
+] + docs_url

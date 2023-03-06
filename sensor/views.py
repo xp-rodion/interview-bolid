@@ -1,9 +1,9 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from sensor.serializers import SensorSerializer
-from sensor.models import Event, Sensor
 from sensor.base_views import BaseCRUDAPIView
+from sensor.models import Event, Sensor
+from sensor.serializers import SensorSerializer
 from sensor.service import EventMixin
 
 
