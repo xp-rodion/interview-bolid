@@ -3,3 +3,4 @@ db.sqlite3
 __pycache__/
 api_bolid/__pycache__/
 sensor/__pycache__/
+.env
