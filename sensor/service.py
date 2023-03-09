@@ -2,8 +2,8 @@ import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 
-from sensor.models import Event
-from sensor.serializers import EventSerializer
+from sensor.models import Event, Sensor
+from sensor.serializers import EventSerializer, SensorSerializer
 
 
 class BasePaginationClass(PageNumberPagination):
@@ -26,3 +26,9 @@ class EventMixin:
     filter_backends = [DjangoFilterBackend]
     filterset_class = EventFilter
     serializer_class = EventSerializer
+
+
+class SensorMixin:
+    serializer_class = SensorSerializer
+    manager = Sensor.objects
+    queryset = manager.all()

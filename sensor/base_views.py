@@ -3,8 +3,15 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 
-class BaseCRUDAPIView(GenericAPIView):
+class FilterAPIView(GenericAPIView):
+
     manager = None
+
+    def get_queryset(self):
+        return self.filter_queryset(super(FilterAPIView, self).get_queryset())
+
+
+class CRBaseAPIView(FilterAPIView):
 
     def get(self, request):
         return Response(self.get_serializer(self.get_queryset(), many=True).data)
@@ -21,6 +28,9 @@ class BaseCRUDAPIView(GenericAPIView):
         else:
             self.serialize(request.data)
         return Response({'POST': 'success'})
+
+
+class UDBaseIView(FilterAPIView):
 
     def put(self, request, pk):
         try:

@@ -17,13 +17,15 @@ from django.contrib import admin
 from django.urls import path
 
 from api_bolid.yasg import urlpatterns as docs_url
-from sensor.views import EventAPIView, SensorAllEventsAPIView, SensorAPIView
+from sensor.views import (CREventAPIView, CRSensorAPIView,
+                          SensorAllEventsAPIView, UPEventAPIView,
+                          UPSensorAPIView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/event/', EventAPIView.as_view()),
-    path('api/event/<int:pk>/', EventAPIView.as_view()),
-    path('api/sensor/', SensorAPIView.as_view()),
-    path('api/sensor/<int:pk>/', SensorAPIView.as_view()),
+    path('api/event/', CREventAPIView.as_view()),
+    path('api/event/<int:pk>/', UPEventAPIView.as_view()),
+    path('api/sensor/', CRSensorAPIView.as_view()),
+    path('api/sensor/<int:pk>/', UPSensorAPIView.as_view()),
     path('api/sensor/events/<int:pk>/', SensorAllEventsAPIView.as_view())
 ] + docs_url
